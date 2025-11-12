@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Order-to-Cash (O2C) — Real-World Case Study</title>
+<meta name="description" content="Recruiter-friendly deep-dive into the SAP Order-to-Cash (O2C) process with a real Coca-Cola case study: flow, modules mapping, KPIs, and outcomes."/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --kaar-red:#B30000;
+  --kaar-red-600:#990000;
+  --ink:#1F2937;
+  --muted:#6B7280;
+  --line:#E5E7EB;
+  --bg:#FFFFFF;
+  --chip:#FDF2F2;
+  --card:#FAFAFA;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans";}
+a{color:var(--kaar-red);text-decoration:none}
+a:hover{opacity:.9;text-decoration:underline}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+.header{display:flex;gap:16px;align-items:center;justify-content:space-between;
+padding:16px 0;border-bottom:1px solid var(--line);}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:40px;height:40px;border-radius:12px;
+background:linear-gradient(135deg,var(--kaar-red),var(--kaar-red-600));
+display:grid;place-items:center;color:#fff;font-weight:800;letter-spacing:.5px;
+box-shadow:0 8px 24px rgba(179,0,0,.25);}
+.badge{font-size:12px;background:var(--chip);color:var(--kaar-red);
+padding:6px 10px;border-radius:999px;border:1px solid #FEE2E2;font-weight:600}
+.hero{padding:28px 0 8px 0;display:grid;gap:10px}
+h1{font-size:clamp(28px,4vw,40px);margin:0;line-height:1.1}
+.lead{color:var(--muted);max-width:80ch;font-size:15.5px}
+.grid{display:grid;gap:16px}
+@media(min-width:900px){.grid{grid-template-columns:1.1fr .9fr}}
+.card{background:var(--card);border:1px solid var(--line);
+border-radius:16px;padding:18px}
+.card h3{margin:0 0 8px 0}
+.kpi{display:grid;gap:8px;grid-template-columns:repeat(3,1fr)}
+.kpi .item{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
+.kpi .n{font-size:22px;font-weight:800;color:var(--kaar-red)}
+.kpi .l{font-size:12px;color:var(--muted)}
+.section{padding:18px 0;border-top:1px solid var(--line);margin-top:18px}
+.section h2{margin:0 0 12px 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:#fff;border:1px solid var(--line);padding:6px 10px;
+border-radius:999px;font-size:12px}
+.flowwrap{display:flex;gap:18px;flex-direction:column}
+@media(min-width:900px){.flowwrap{flex-direction:row}}
+.flow{position:relative;padding:16px;background:#fff;
+border:1px solid var(--line);border-radius:16px;flex:1}
+.flow h4{margin:0 0 12px 0}
+.step{display:flex;align-items:flex-start;gap:12px;padding:10px 8px;
+border-left:3px solid var(--kaar-red);margin:10px 0}
+.step .i{width:28px;height:28px;border-radius:8px;background:var(--chip);
+display:grid;place-items:center;color:var(--kaar-red);font-weight:800}
+.step .t{font-weight:600}
+.note{font-size:12.5px;color:var(--muted)}
+.table{width:100%;border-collapse:separate;border-spacing:0;
+border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.table th,.table td{padding:12px 14px;border-bottom:1px solid var(--line);
+text-align:left;font-size:14px}
+.table th{background:#F9FAFB}
+.table tr:last-child td{border-bottom:0}
+.footer{padding:24px 0;color:var(--muted);font-size:12.5px;text-align:center}
+.highlight{background:linear-gradient(0deg,#fff 60%, #FDE8E8 60%)}
+.callout{border-left:5px solid var(--kaar-red);background:#FFF5F5;padding:14px;border-radius:8px}
+.small{font-size:12px;color:var(--muted)}
+.copy{display:inline-flex;gap:8px;align-items:center}
+.btn{display:inline-flex;gap:8px;align-items:center;background:var(--kaar-red);color:#fff;
+border:none;border-radius:999px;padding:10px 14px;font-weight:700;cursor:pointer}
+.btn:active{transform:translateY(1px)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+background:#f5f5f5;padding:2px 5px;border-radius:6px}
+.sources{font-size:13px;color:var(--muted);margin-top:10px}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="brand">
+      <div class="logo">O2C</div>
+      <div>
+        <div class="badge">SAP Case Study</div>
+        <div class="copy" style="margin-top:6px"><strong>Order-to-Cash — Coca-Cola (Real Case)</strong></div>
+      </div>
+    </div>
+    <div class="copy">
+      <button class="btn" onclick="navigator.clipboard.writeText(location.href)"><span>Copy Link</span></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1><span class="highlight">Real-World O2C Implementation</span> — Coca-Cola Bottlers & SAP</h1>
+    <p class="lead">Concise case study showing how Coca-Cola bottlers integrated SAP (S/4HANA & SAP Commerce Cloud) to improve order capture, delivery tracking, automated billing and cash application — results and references included for recruiters and interview panels.</p>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h3>Business Context (Coca-Cola HBC & Bottlers)</h3>
+      <p>
+        Coca-Cola Hellenic Bottling Company (Coca-Cola HBC) and several Coca-Cola bottlers worldwide implemented SAP S/4HANA / SAP Commerce Cloud to centralize order capture, inventory visibility, logistics, and invoicing. These efforts created a unified digital order management backbone for thousands of B2B customers and millions of small orders per year.
+      </p>
+      <div class="kpi" style="margin-top:12px">
+        <div class="item"><div class="n">160,000+</div><div class="l">Customers registered on Coca-Cola HBC’s commerce portal (reported).</div></div>
+        <div class="item"><div class="n">130,000+</div><div class="l">Monthly orders placed via SAP Commerce Cloud (reported).</div></div>
+        <div class="item"><div class="n">50,000+</div><div class="l">Orders automated for invoicing at Coca-Cola United using Power Platform + SAP.</div></div>
+      </div>
+      <p class="small">Sources & details at the bottom of the page.</p>
+    </div>
+
+    <div class="card">
+      <h3>Stakeholders & Departments</h3>
+      <div class="chips" style="margin-top:6px">
+        <span class="chip">Customers / Retailers</span>
+        <span class="chip">Sales & Marketing</span>
+        <span class="chip">Order Management / Call Center</span>
+        <span class="chip">Credit Control</span>
+        <span class="chip">Warehouse / Logistics</span>
+        <span class="chip">Finance (AR)</span>
+        <span class="chip">IT / SAP CoE</span>
+      </div>
+      <p class="note" style="margin-top:10px">Tip: On your slide mention the stakeholder at the exact process step where they act (e.g., Credit Control during credit check).</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>End-to-End Flow</h2>
+    <div class="flowwrap">
+      <div class="flow">
+        <h4>Process Steps (O2C)</h4>
+        <div class="step"><div class="i">1</div><div><div class="t">Inquiry & Quotation</div><div class="note">Customer request, pricing & validity entered (SD / Commerce Cloud).</div></div></div>
+        <div class="step"><div class="i">2</div><div><div class="t">Sales Order (SO)</div><div class="note">SO created; customer master and pricing conditions applied (SD).</div></div></div>
+        <div class="step"><div class="i">3</div><div><div class="t">Availability & Credit Check</div><div class="note">ATP checks inventory; credit policies evaluated (SD + MM + FI-AR).</div></div></div>
+        <div class="step"><div class="i">4</div><div><div class="t">Delivery & Picking</div><div class="note">Outbound delivery, pick/pack, route planning; integrated with transport visibility tools.</div></div></div>
+        <div class="step"><div class="i">5</div><div><div class="t">Post Goods Issue (PGI)</div><div class="note">Inventory reduced; COGS and accounting postings triggered (MM / FI-CO).</div></div></div>
+        <div class="step"><div class="i">6</div><div><div class="t">Billing & Invoice</div><div class="note">Invoice generation with tax; accounting doc posted; SD→FI integration.</div></div></div>
+        <div class="step"><div class="i">7</div><div><div class="t">Payment & Clearing</div><div class="note">Bank statements, auto-matching, dunning, dispute resolution (FI-AR).</div></div></div>
+      </div>
+
+      <div class="flow">
+        <h4>SAP Modules & Enablers</h4>
+        <table class="table">
+          <thead><tr><th>Stage</th><th>Automation / Tool</th><th>Module</th></tr></thead>
+          <tbody>
+            <tr><td>Inquiry / Commerce</td><td>Online B2B ordering, customer portal</td><td>SAP Commerce Cloud + SD</td></tr>
+            <tr><td>Sales Order</td><td>Master data, pricing conditions, order validation</td><td>SD</td></tr>
+            <tr><td>ATP & Credit</td><td>Available-to-promise; credit exposure & workflow</td><td>SD + MM + FI-AR</td></tr>
+            <tr><td>Delivery / Transport</td><td>Transport visibility & ETA (integrations, Shippeo)</td><td>SD + SAP Integration Suite</td></tr>
+            <tr><td>PGI</td><td>Inventory decrement, COGS posting</td><td>MM + FI-CO</td></tr>
+            <tr><td>Billing</td><td>Automated invoice creation, tax services</td><td>SD → FI</td></tr>
+            <tr><td>Payment</td><td>Bank import, auto-clearing, dunning</td><td>FI-AR</td></tr>
+          </tbody>
+        </table>
+        <div class="callout" style="margin-top:10px">
+          <strong>Note:</strong> Coca-Cola HBC integrated SAP S/4HANA with transport visibility partners to improve on-time delivery awareness and to proactively manage exceptions. See sources below.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Pain-Points → SAP Fix</h2>
+    <table class="table">
+      <thead><tr><th>Legacy Pain-Point</th><th>Impact</th><th>How SAP Resolves</th></tr></thead>
+      <tbody>
+        <tr><td>Manual order capture</td><td>Delays & rework</td><td>Online B2B portal and guided SO entry (Commerce Cloud + SD)</td></tr>
+        <tr><td>Lack of real-time stock</td><td>Backorders & stockouts</td><td>ATP with central inventory (MM / EWM)</td></tr>
+        <tr><td>Poor delivery visibility</td><td>Late deliveries & disputes</td><td>Transport visibility integrations (Shippeo) with SAP</td></tr>
+        <tr><td>Invoice & billing errors</td><td>Customer disputes</td><td>Automated billing, pricing & tax (SD → FI)</td></tr>
+        <tr><td>Slow invoice processing</td><td>High operational load</td><td>Automation + Power Platform connectors for SAP (example: Coca-Cola United)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2>Measurable Outcomes (Real Examples)</h2>
+    <div class="kpi">
+      <div class="item"><div class="n">50% → 70%+</div><div class="l">Delivery tracking improvement target (Coca-Cola HBC rollout of transport visibility partner).</div></div>
+      <div class="item"><div class="n">160,000+</div><div class="l">Registered B2B customers on commerce portal (Coca-Cola HBC reported figure).</div></div>
+      <div class="item"><div class="n">50,000+</div><div class="l">Orders automated in invoicing at Coca-Cola United using Power Platform + SAP.</div></div>
+    </div>
+    <p class="note" style="margin-top:8px">These figures are from published Coca-Cola / SAP / partner customer stories — see Sources below for original documents and articles.</p>
+  </section>
+
+  <section class="section">
+    <h2>How to Reference from Your Slide</h2>
+    <ol>
+      <li>Add a single line on your slide: <code>“Full case study (Coca-Cola bottlers): link in slide notes.”</code></li>
+      <li>Paste this page link in the slide notes and as a clickable icon on Slide 6.</li>
+      <li>Optionally add a QR code image that points to this URL for panel members to scan.</li>
+    </ol>
+    <p class="small">This short web page complements your 6–8 PPT slides and keeps the slide count within KaarTech's requirements.</p>
+  </section>
+
+  <section class="section">
+    <h2>Sources & Further Reading</h2>
+    <div class="sources">
+      <ul>
+        <li><a href="https://www.sap.com/india/store/coca-cola-hbc-how-did-a-major-leap-in-supply-chain-visibility-fuel-a-customer-centric-approach.html" target="_blank" rel="noopener">SAP: Coca-Cola HBC – supply chain visibility & transport integration (June 2023)</a></li>
+        <li><a href="https://www.sap.com/india/asset/dynamic/2024/05/e818ce4e-bd7e-0010-bca6-c68f7e60039b.html" target="_blank" rel="noopener">SAP: Coca-Cola HBC – commerce cloud & omnichannel order metrics (2024)</a></li>
+        <li><a href="https://www.microsoft.com/en-us/power-platform/blog/2022/12/09/coca-cola-united-automates-multi-step-sap-invoicing-process-with-microsoft-power-platform/" target="_blank" rel="noopener">Microsoft: Coca-Cola United automates 50,000+ invoicing orders with Power Platform + SAP (Dec 2022)</a></li>
+        <li><a href="https://www.ecs-co.com/projects/coca-cola-bottling-company%3A-preparing-for-the-future-by-implementing-sap-s%2F4hana-with-the-help-of-ecs" target="_blank" rel="noopener">ECS: Coca-Cola bottler SAP S/4HANA implementation (project summary)</a></li>
+        <li><a href="https://www.scribd.com/document/203387968/Coca-Cola-ERP" target="_blank" rel="noopener">Historical whitepapers and reports on Coca-Cola ERP & SAP adoption (archive)</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="footer">
+    Built by Isaac Pradeep Raj K L • O2C Case Study • Theme: Kaar BPU Assignment 
+  </footer>
+</div>
+</body>
+</html>
